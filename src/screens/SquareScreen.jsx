@@ -5,13 +5,19 @@ import ColorCounter from '../components/ColorCounter';
 const COLOR_INCREMENT = 25;
 
 const reducer = (state, action) => {
-  switch (action.colorToChange) {
-    case 'red':
-      return { ...state, red: state.red + action.amount };
-    case 'green':
-      return { ...state, green: state.green + action.amount };
-    case 'blue':
-      return { ...state, blue: state.blue + action.amount };
+  switch (action.type) {
+    case 'change_red':
+      return state.red + action.payload > 255 || state.red + action.payload < 0
+        ? state
+        : { ...state, red: state.red + action.payload };
+    case 'change_green':
+      return state.green + action.payload > 255 || state.green + action.payload < 0
+        ? state
+        : { ...state, green: state.green + action.payload };
+    case 'change_blue':
+      return state.blue + action.payload > 255 || state.blue + action.payload < 0
+        ? state
+        : { ...state, blue: state.blue + action.payload };
     default:
       return state;
   }
@@ -19,32 +25,37 @@ const reducer = (state, action) => {
 
 function SquareScreen() {
 
-
   const [state, dispatch] = useReducer(reducer, { red: 0, green: 0, blue: 0 });
-  // console.log(state);
-
+  const { red, green, blue } = state;
   return (
     <View>
       <ColorCounter
-        onIncrease={() => )}
-      onDecrease={() => )}
-      color="Red"
+        onIncrease={() => dispatch({ type: 'change_red', payload: COLOR_INCREMENT })}
+        onDecrease={() => dispatch({ type: 'change_red', payload: -1 * COLOR_INCREMENT })}
+        color="Red"
       />
       <ColorCounter
-        onIncrease={() => )}
-      onDecrease={() => )}
-      color="Blue"
+        onIncrease={() => dispatch({ type: 'change_blue', payload: COLOR_INCREMENT })}
+        onDecrease={() => dispatch({ type: 'change_blue', payload: -1 * COLOR_INCREMENT })}
+        color="Blue"
       />
       <ColorCounter
         color="Green"
-        onIncrease={() => )}
-      onDecrease={() => )}
+        onIncrease={() => dispatch({ type: 'change_green', payload: COLOR_INCREMENT })}
+        onDecrease={() => dispatch({ type: 'change_green', payload: -1 * COLOR_INCREMENT })}
       />
-      <View style={{ height: 150, width: 150, backgroundColor: `rgb(${red},${green},${blue})` }} />
+      <View style={{
+        height: 150,
+        width: 150,
+        backgroundColor: `rgb(${red},${green},${blue})`,
+        marginTop: 10,
+        marginHorizontal: 80
+      }}
+      />
     </View>
   )
 }
 
 const styles = StyleSheet.create({});
 
-export default SquareScreen
+export default SquareScreen;
